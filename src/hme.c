@@ -1492,4 +1492,3 @@ dsv_hme(DSV_HME *hme, int *scene_change_blocks)
     }
     return (nintra * 100) / (hme->params->nblocks_h * hme->params->nblocks_v);
 }
-
