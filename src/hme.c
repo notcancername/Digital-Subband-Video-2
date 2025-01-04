@@ -100,58 +100,61 @@ iisqrt(unsigned int n)
     return ((int) res);
 }
 
-/* NOTE: if SIMPLE_SAD is not set, these are RMSE functions, not SAD */
-#define MAKE_SAD(w)                                                           \
-static int                                                                    \
-sad_ ##w## xh(uint8_t *a, int as, uint8_t *b, int bs, int h)                  \
-{                                                                             \
-    int i, j, acc = 0;                                                        \
-    for (j = 0; j < h; j++) {                                                 \
-        for (i = 0; i < w; i++) {                                             \
-            int dif = (a[i] - b[i]);                                          \
-            acc += SADCMP(dif);                                               \
-        }                                                                     \
-        a += as;                                                              \
-        b += bs;                                                              \
-    }                                                                         \
-    return SADRET(acc, w, h);                                                 \
-}
+/* /\* NOTE: if SIMPLE_SAD is not set, these are RMSE functions, not SAD *\/ */
+/* #define MAKE_SAD(w)                                                           \ */
+/* static int                                                                    \ */
+/* sad_ ##w## xh(uint8_t *a, int as, uint8_t *b, int bs, int h)                  \ */
+/* {                                                                             \ */
+/*     int i, j, acc = 0;                                                        \ */
+/*     for (j = 0; j < h; j++) {                                                 \ */
+/*         for (i = 0; i < w; i++) {                                             \ */
+/*             int dif = (a[i] - b[i]);                                          \ */
+/*             acc += SADCMP(dif);                                               \ */
+/*         }                                                                     \ */
+/*         a += as;                                                              \ */
+/*         b += bs;                                                              \ */
+/*     }                                                                         \ */
+/*     return SADRET(acc, w, h);                                                 \ */
+/* } */
 
-MAKE_SAD(8)
-MAKE_SAD(16)
-MAKE_SAD(32)
+/* MAKE_SAD(8) */
+/* MAKE_SAD(16) */
+/* MAKE_SAD(32) */
 
-static int
-sad_wxh(uint8_t *a, int as, uint8_t *b, int bs, int w, int h)
-{
-    int i, j;
-    unsigned acc = 0;
+/* static int */
+/* sad_wxh(uint8_t *a, int as, uint8_t *b, int bs, int w, int h) */
+/* { */
+/*     int i, j; */
+/*     unsigned acc = 0; */
 
-    for (j = 0; j < h; j++) {
-        for (i = 0; i < w; i++) {
-            int dif = (a[i] - b[i]);
-            acc += SADCMP(dif);
-        }
-        a += as;
-        b += bs;
-    }
-    return SADRET(acc, w, h);
-}
+/*     for (j = 0; j < h; j++) { */
+/*         for (i = 0; i < w; i++) { */
+/*             int dif = (a[i] - b[i]); */
+/*             acc += SADCMP(dif); */
+/*         } */
+/*         a += as; */
+/*         b += bs; */
+/*     } */
+/*     return SADRET(acc, w, h); */
+/* } */
 
-static int
-fastsad(uint8_t *a, int as, uint8_t *b, int bs, int w, int h)
-{
-    switch (w) {
-        case 8:
-            return sad_8xh(a, as, b, bs, h);
-        case 16:
-            return sad_16xh(a, as, b, bs, h);
-        case 32:
-            return sad_32xh(a, as, b, bs, h);
-        default:
-            return sad_wxh(a, as, b, bs, w, h);
-    }
-}
+/* static int */
+/* fastsad(uint8_t *a, int as, uint8_t *b, int bs, int w, int h) */
+/* { */
+/*     switch (w) { */
+/*         case 8: */
+/*             return sad_8xh(a, as, b, bs, h); */
+/*         case 16: */
+/*             return sad_16xh(a, as, b, bs, h); */
+/*         case 32: */
+/*             return sad_32xh(a, as, b, bs, h); */
+/*         default: */
+/*             return sad_wxh(a, as, b, bs, w, h); */
+/*     } */
+/* } */
+
+int fastsad(uint8_t *a, int as, uint8_t *b, int bs, int w, int h);
+
 
 /* this function is intended to 'prove' to the intra decision
  * that the ref block with (0,0) motion does more good than evil */

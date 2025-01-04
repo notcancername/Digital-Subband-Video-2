@@ -5,6 +5,15 @@ pub fn build(b: *std.Build) void {
     const optimize = b.standardOptimizeOption(.{ .preferred_optimize_mode = .ReleaseFast });
     const strip = b.option(bool, "strip", "Whether to strip symbols from the binary, defaults to false") orelse false;
 
+    const sad = b.addObject(.{
+        .name = "sad",
+        .root_source_file = b.path("src/sad.zig"),
+        .target = target,
+        .link_libc = true,
+        .optimize = optimize,
+        .strip = strip,
+    });
+
     // Create the executable
     const bin = b.addExecutable(.{
         .name = "dsv2",
@@ -37,5 +46,7 @@ pub fn build(b: *std.Build) void {
             "-Werror",
         },
     });
+    bin.addObject(sad);
+
     b.installArtifact(bin);
 }
