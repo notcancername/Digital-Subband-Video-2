@@ -66,7 +66,7 @@ chroma_analysis(CHROMA_PSY *c, int y, int u, int v)
 #define HP_STRIDE (SP_DIM * 2)
 #define QP_STRIDE (SP_DIM * 4)
 
-#define SIMPLE_SAD 0
+#define SIMPLE_SAD 1
 #if SIMPLE_SAD
 #define SADCMP(d) abs(d)
 #define SADRET(a, w, h) (a)
