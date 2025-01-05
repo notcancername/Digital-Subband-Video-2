@@ -1,0 +1,19 @@
+.{
+    .name = "dsv2",
+
+    .version = "0.0.0",
+
+    .dependencies = .{
+        .simd = .{
+            .url = "git+https://codeberg.org/cancername/simd#e1a2ef87101c35571891f518943273916ca315b4",
+            .hash = "12202c1a8c4ad33cf1cf96c8217206b677ecfcd9a6d57c581004b52b3d16b678f8ab",
+        },
+    },
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+        "LICENSE",
+        "README.md",
+    },
+}

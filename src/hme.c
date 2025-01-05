@@ -332,7 +332,7 @@ is_inter_better(
 unsigned
 block_tex(uint8_t *a, int as, int w, int h);
   
-/* DEBUG ONLY */
+/* only referenced from zig in debug to validate results */
 unsigned
 c_block_tex(uint8_t *a, int as, int w, int h)
 {
@@ -362,8 +362,12 @@ c_block_tex(uint8_t *a, int as, int w, int h)
     return MAX(sh, sv) / (w * h);
 }
 
-static int
-block_var(uint8_t *a, int as, int w, int h, unsigned *avg)
+int
+block_var(uint8_t *a, int as, int w, int h, unsigned *avg);
+
+/* only referenced from zig in debug to validate results */
+int
+c_block_var(uint8_t *a, int as, int w, int h, unsigned *avg)
 {
     int i, j;
     int s = 0, var = 0;

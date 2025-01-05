@@ -42,7 +42,7 @@ pub fn sadSimd(
         var a_row = a + row * a_stride;
         const a_end = a_row + width;
         var b_row = b + row * b_stride;
-        comptime var len = std.simd.suggestVectorLength(u8).?;
+        comptime var len = std.simd.suggestVectorLength(u8) orelse 0;
 
         inline while (len >= 8) : (len = @divExact(len, 2)) {
             const offset = width % len;
@@ -62,7 +62,6 @@ pub fn sadSimd(
 
         const rest_len = a_end - a_row;
         for (a_row, b_row, 0..rest_len) |a_sample, b_sample, _| {
-            @branchHint(.unlikely);
             sum += @abs(@as(i16, a_sample) - @as(i16, b_sample));
         }
     }
@@ -153,5 +152,14 @@ export fn fastsad(
     w: c_int,
     h: c_int,
 ) c_int {
-    return @intCast(fastSad(a, @intCast(as), b, @intCast(bs), @intCast(w), @intCast(h)));
+    const v: c_int = @intCast(fastSad(a, @intCast(as), b, @intCast(bs), @intCast(h), @intCast(w)));
+    if (@import("builtin").mode == .Debug) {
+        const v2: c_int = @intCast(_sad(a, @intCast(as), b, @intCast(bs), @intCast(h), @intCast(w)));
+
+        if (v != v2) {
+            std.log.debug("{d} {d}", .{ v, v2 });
+            unreachable;
+        }
+    }
+    return v;
 }
