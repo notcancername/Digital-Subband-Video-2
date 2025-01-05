@@ -1,18 +1,26 @@
 const std = @import("std");
 
-pub fn build(b: *std.Build) void {
-    const target = b.standardTargetOptions(.{});
-    const optimize = b.standardOptimizeOption(.{ .preferred_optimize_mode = .ReleaseFast });
-    const strip = b.option(bool, "strip", "Whether to strip symbols from the binary, defaults to false") orelse false;
-
-    const sad = b.addObject(.{
-        .name = "sad",
-        .root_source_file = b.path("src/sad.zig"),
+fn zigObject(b: *std.Build, name: []const u8, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode, strip: bool) *std.Build.Step.Compile {
+    return b.addObject(.{
+        .name = name,
+        .root_source_file = b.path(std.fmt.allocPrint(b.allocator, "src/{s}.zig", .{name}) catch @panic("OOM")),
         .target = target,
         .link_libc = true,
         .optimize = optimize,
         .strip = strip,
     });
+}
+
+pub fn build(b: *std.Build) void {
+    const target = b.standardTargetOptions(.{});
+    const optimize = b.standardOptimizeOption(.{ .preferred_optimize_mode = .ReleaseFast });
+    const strip = b.option(bool, "strip", "Whether to strip symbols from the binary, defaults to false") orelse false;
+
+    const sad = zigObject(b, "sad", target, optimize, strip);
+    sad.root_module.addImport("simd", b.dependency("simd", .{ .target = target, .optimize = optimize }).module("simd"));
+
+    const hme1 = zigObject(b, "hme1", target, optimize, strip);
+    hme1.root_module.addImport("simd", b.dependency("simd", .{ .target = target, .optimize = optimize }).module("simd"));
 
     // Create the executable
     const bin = b.addExecutable(.{
@@ -44,9 +52,12 @@ pub fn build(b: *std.Build) void {
             "-Wextra",
             "-Wpedantic",
             "-Werror",
+            "-ggdb3",
+            "-gdwarf",
         },
     });
     bin.addObject(sad);
+    bin.addObject(hme1);
 
     b.installArtifact(bin);
 }

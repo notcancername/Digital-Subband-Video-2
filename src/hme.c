@@ -329,8 +329,12 @@ is_inter_better(
     return 0;
 }
 
-static unsigned
-block_tex(uint8_t *a, int as, int w, int h)
+unsigned
+block_tex(uint8_t *a, int as, int w, int h);
+  
+/* DEBUG ONLY */
+unsigned
+c_block_tex(uint8_t *a, int as, int w, int h)
 {
     int i, j;
     int prev;
