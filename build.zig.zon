@@ -5,8 +5,8 @@
 
     .dependencies = .{
         .simd = .{
-            .url = "git+https://codeberg.org/cancername/simd#e1a2ef87101c35571891f518943273916ca315b4",
-            .hash = "12202c1a8c4ad33cf1cf96c8217206b677ecfcd9a6d57c581004b52b3d16b678f8ab",
+            .url = "git+https://codeberg.org/cancername/simd#e6b5a40add8722314de0484311d5be06d986fa2e",
+            .hash = "1220d35e5c5a264df5ed96c5bb57f43b529dd7ab8a0844161a9fb33ef006ad60e1a6",
         },
     },
     .paths = .{

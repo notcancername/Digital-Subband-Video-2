@@ -42,9 +42,10 @@ pub fn sadSimd(
         var a_row = a + row * a_stride;
         const a_end = a_row + width;
         var b_row = b + row * b_stride;
-        comptime var len = std.simd.suggestVectorLength(u8) orelse 0;
+        comptime var len = simd.cur_features.largestNativeVectorLength(u8) orelse 0;
+        const slen = comptime simd.cur_features.smallestNativeVectorLength(u8) orelse 1;
 
-        inline while (len >= 8) : (len = @divExact(len, 2)) {
+        inline while (len >= slen) : (len = @divExact(len, 2)) {
             const offset = width % len;
 
             const V = @Vector(len, u8);
@@ -85,9 +86,10 @@ fn rmseSimd(
         var a_row = a + row * a_stride;
         const a_end = a_row + width;
         var b_row = b + row * b_stride;
-        comptime var len = std.simd.suggestVectorLength(u8).?;
+        comptime var len = simd.cur_features.largestNativeVectorLength(u8) orelse 0;
+        const slen = comptime simd.cur_features.smallestNativeVectorLength(u8) orelse 1;
 
-        inline while (len >= 8) : (len = @divExact(len, 2)) {
+        inline while (len >= slen) : (len = @divExact(len, 2)) {
             const offset = width % len;
 
             if (len <= offset) {

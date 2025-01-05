@@ -49,9 +49,10 @@ fn blockTexSimd(a: [*]const u8, stride: usize, width: usize, height: usize) usiz
         var up_column_cursor = up_row_cursor;
         var left_sample: i16 = column_cursor[0];
 
-        comptime var len = std.simd.suggestVectorLength(i16) orelse 0;
+        comptime var len = simd.cur_features.largestNativeVectorLength(i16) orelse 0;
+        const slen = comptime simd.cur_features.smallestNativeVectorLength(i16) orelse 1;
 
-        inline while (len >= 4) : (len = @divExact(len, 2)) {
+        inline while (len >= slen) : (len = @divExact(len, 2)) {
             const offset = width % (len);
 
             const V = @Vector(len, i16);
@@ -132,8 +133,10 @@ fn blockVar(a: [*]const u8, stride: usize, width: usize, height: usize) struct {
         var a_cursor = a + row * stride;
         const row_end = a_cursor + width;
 
-        comptime var len = std.simd.suggestVectorLength(u16) orelse 0;
-        inline while (len >= 4) : (len = @divExact(len, 2)) {
+        comptime var len = simd.cur_features.largestNativeVectorLength(u16) orelse 0;
+        const slen = comptime simd.cur_features.smallestNativeVectorLength(u16) orelse 1;
+
+        inline while (len >= slen) : (len = @divExact(len, 2)) {
             const V = @Vector(len, u16);
             const offset = width % len;
             const end_of_simd = row_end - offset;
@@ -166,8 +169,10 @@ fn blockVar(a: [*]const u8, stride: usize, width: usize, height: usize) struct {
         var a_cursor = a + row * stride;
         const row_end = a_cursor + width;
 
-        comptime var len = std.simd.suggestVectorLength(i16) orelse 0;
-        inline while (len >= 4) : (len = @divExact(len, 2)) {
+        comptime var len = simd.cur_features.largestNativeVectorLength(i16) orelse 0;
+        const slen = comptime simd.cur_features.smallestNativeVectorLength(i16) orelse 1;
+
+        inline while (len >= slen) : (len = @divExact(len, 2)) {
             const V = @Vector(len, i16);
             const offset = width % len;
             const end_of_simd = row_end - offset;
